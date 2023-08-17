@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const ChurrasSchema = new mongoose.Schema({
 
@@ -7,11 +7,14 @@ const ChurrasSchema = new mongoose.Schema({
     descricao: { type: String },
     participantes: [{
         nome: { type: String, required: true },
-        valorContribuicao: { type: number },
+        valorContribuicao: { type: Number },
         bebida: { type: Boolean },
         pago: { type: Boolean },
         obs: { type: String }
-    }]
+    }],
+    totalArrecadado: {type: Number}
 })
 
-module.exports = mongoose.model("churras", ChurrasSchema);
+const churras = mongoose.model("churras", ChurrasSchema);
+export default churras;
+

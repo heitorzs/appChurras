@@ -1,0 +1,51 @@
+.formulario {
+    display: flex;
+    justify-content: start;
+    margin: 3rem;
+    
+}
+section {
+    display: flex;
+    
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    
+    background-color: #F2F2F2;
+    border-radius: 20px;
+    padding: 36px 64px;
+
+    box-shadow: 8px 8px 16px rgba(0,0,0, 0.08);
+    border: 1px solid black;
+}
+input {
+    display: flex;
+    margin: .6rem;
+    padding: .5rem; 
+}
+
+textarea {
+  
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  resize: none;
+}
+
+button {
+    display: flex;
+    justify-content: start;
+    width: 8rem;
+    background: #F2F2F2;
+    align-items: center;
+    padding: 5px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
