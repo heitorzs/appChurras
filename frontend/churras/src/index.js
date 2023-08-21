@@ -5,6 +5,8 @@ import App from './App';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import CadastrarChurrasco from './Pages/cadastrarChurrasco';
 import AdicionarParticipante from './Pages/adicionarParticipante'
+import DetalhesChurrasco from './Pages/detalhesChurrasco'
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,7 +15,8 @@ root.render(
         <Routes>
             <Route path='/' element={<App />} />
             <Route path='/cadastrarChurrasco' element={<CadastrarChurrasco />}/>
-            <Route path='/adicionarParticipante' element={<AdicionarParticipante/>}/>
+            <Route path='/adicionarParticipante/:id' element={<AdicionarParticipante/>}/>
+            <Route path='/detalhesChurrasco/:id' element={<DetalhesChurrasco/>}/>
         </Routes>
 
     </BrowserRouter>

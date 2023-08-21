@@ -7,9 +7,8 @@ router
   .get("/churrascos", ChurrasControllers.listarChurras)
   .get("/churrascos/:id", ChurrasControllers.listarChurrasByID)
   .post("/churrascos", ChurrasControllers.criarChurras)
-  .post("/churrascos/:id/participantes", ChurrasControllers.adicionarParticipante) 
-  .put("/churracos/:id", )
+  .put("/churrascos/:id", ChurrasControllers.adicionarParticipante) 
   .delete("/churrascos/:id", ChurrasControllers.excluirChurrasco)
-  .delete("/churrascos/participante/:id", )  
+  .delete("/churrascos/:id/participante/:id", )  
 
 export default router;

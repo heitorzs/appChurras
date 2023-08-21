@@ -14,7 +14,7 @@ class ChurrasControllers {
   static listarChurrasByID = async (req, res, next) => {
     const id = req.params.id
     try {
-      const churrasResultado = await churras.findOne(id);
+      const churrasResultado = await churras.find({_id: id});
       res.status(200).json(churrasResultado);
     } catch (error) {
       next(error);
@@ -34,9 +34,14 @@ class ChurrasControllers {
 
   static adicionarParticipante = async (req, res) => {
     const id = req.params.id
-    const {novoParticipante} = req.body;
+    const novoParticipante = req.body;
 
-    churras.findByIdAndUpdate(id, novoParticipante)
+    churras.findByIdAndUpdate(
+      {_id: id},
+      {$push: {participantes: novoParticipante }},
+      {new: true}
+      )
+
     .then((data) => {
       console.log("Participante Adicionado")
       res.status(201).send(data)
@@ -47,15 +52,14 @@ class ChurrasControllers {
   }
 
   static excluirChurrasco = async (req, res) => {
-    
+  
     const id = req.params.id
-    churras.findByIdAndDelete(id).then(()=> res.send("churrasco Deletado"))
-    console.log("churrasco excluido")
+    churras.findByIdAndDelete({_id: id})
+    .then(()=> res.send("churrasco Deletado"))
     .catch((err)=>{
       console.log(err)
       res.send({error: err, msg: "Erro ao deletar"})
     })
-
   }
 
 }

@@ -1,37 +1,43 @@
 import React from 'react'
+import { useParams } from "react-router-dom"
 import Header from '../components/Header'
 import axios from 'axios';
 import { useState } from 'react';
-import { Button, Checkbox,  TextField, TextareaAutosize, } from '@mui/material';
+import { Button, Checkbox, TextField,} from '@mui/material';
+import './form.css'
 
 
-export default function CadastrarParticipante(churrasco) {
-
+export default function AdicionarParticipante() {
   const [nomeParticipante, setNomeParticipante] = useState('');
   const [valorContribuicao, setValorContribuicao] = useState('');
   const [bebida, setBebida] = useState(false);
   const [pago, setPago] = useState(false);
   const [obs, setObs] = useState('');
 
-  const handleSubmit = async (event, {id}) => {
+  const parametros = useParams()
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    
+
     const novoParticipante = {
-      
-      participantes: [{
-        nome: nomeParticipante,
-        valorContribuicao,
-        bebida,
-        pago,
-        obs,
-      }]
+
+      nome: nomeParticipante,
+      valorContribuicao,
+      bebida,
+      pago,
+      obs,
+
     };
 
     try {
-      const response = await axios.post(`http://localhost:5000/churrascos/${id}/participantes`, novoParticipante);
+      const response = await axios.put(`http://localhost:5000/churrascos/${parametros.id}`, novoParticipante);
       console.log('Resposta do servidor:', response.data);
-      // Realizar alguma ação ou redirecionar após o sucesso, se necessário.
+      setNomeParticipante('')
+      setObs('')
+      setValorContribuicao('')
+      setPago(false)
+      setBebida(false)
     } catch (error) {
       console.error('Erro ao enviar requisição:', error);
     }
@@ -41,33 +47,47 @@ export default function CadastrarParticipante(churrasco) {
   return (
     <>
       <Header />
-      <div style={{margin: '20,50,20,50'}}>
 
-        <div style={{ background: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div className='wrapper'>
 
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '5px' }} onSubmit={handleSubmit}>
+        <form className="form_wrap" onSubmit={handleSubmit}>
 
-            <h2>Novo Participante</h2>
-            <TextField variant='standard' label="Nome do Participante" value={nomeParticipante} onChange={(e) => setNomeParticipante(e.target.value)} required />
+          <h1>Novo Participante</h1>
+          <TextField
+            className='input'
+            variant='standard'
+            label="Nome do Participante"
+            value={nomeParticipante} onChange={(e) => setNomeParticipante(e.target.value)}
+            required />
 
-            <TextField variant='standard' label="valor da Contribuição" type="number" value={valorContribuicao} onChange={(e) => setValorContribuicao(e.target.value)} required />
+          <TextField
+            className='input'
+            variant='standard'
+            label="valor da Contribuição"
+            type="number" value={valorContribuicao}
+            onChange={(e) => setValorContribuicao(e.target.value)}
+            required />
 
-            <div>
-              <label>Bebida:</label>
-              <Checkbox label="Bebida" checked={bebida} onChange={(e) => setBebida(e.target.checked)} />
+            <div> 
+
+            <label>Bebida:</label>
+            <Checkbox label="Bebida" checked={bebida} onChange={(e) => setBebida(e.target.checked)} />
+          
+            <label>Pago:</label>
+            <Checkbox type="checkbox" checked={pago} onChange={(e) => setPago(e.target.checked)} />
             </div>
-            <div>
-              <label>Pago:</label>
-              <Checkbox type="checkbox" checked={pago} onChange={(e) => setPago(e.target.checked)} />
-            </div>
-            <div>
-              <label>Observações:</label>
-              <TextareaAutosize value={obs} onChange={(e) => setObs(e.target.value)} />
-            </div>
+          
+          
+            <TextField 
+            className='input'
+            id='multiline'
+            placeholder='Obs do participante'
+            value={obs} 
+            onChange={(e) => setObs(e.target.value)} />
+          
 
-            <Button type="submit">Adicionar Participante</Button>
-          </form>
-        </div>
+          <Button variant="outlined" type="submit">Adicionar Participante</Button>
+        </form>
       </div>
     </>
 
