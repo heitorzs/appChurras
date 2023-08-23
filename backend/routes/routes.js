@@ -9,6 +9,6 @@ router
   .post("/churrascos", ChurrasControllers.criarChurras)
   .put("/churrascos/:id", ChurrasControllers.adicionarParticipante) 
   .delete("/churrascos/:id", ChurrasControllers.excluirChurrasco)
-  .delete("/churrascos/:id/participante/:id", )  
+  .delete("/churrascos/:id/participante/:participanteId", ChurrasControllers.excluirParticipante)  
 
 export default router;

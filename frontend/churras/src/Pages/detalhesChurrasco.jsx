@@ -1,8 +1,10 @@
 import Header from "../components/Header";
+import './form.css'
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useParams } from "react-router-dom"
 import { Button, Checkbox, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { format, utcToZonedTime } from 'date-fns-tz'
 
 
 
@@ -26,17 +28,35 @@ const DetalhesChurrasco = () => {
 
     useEffect(() => {
         fetchChurrascosByID()
-        console.log(participantes)
     }, [])
 
+    function formatarData(data) {
+        const dataFormatada = format(utcToZonedTime(new Date(data), 'UTC'), 'dd/MM/yy', { timeZone: 'UTC' })
+        return dataFormatada
+    }
+
+    async function excluirParticipante(participanteId) {
+        const id = participanteId
+        try {
+            await axios.delete(`http://localhost:5000/churrascos/${parametros.id}/participante/${id}`)
+            const participanteAtualizado = participantes.filter(participante => participante._id !== participanteId)
+            setParticipantes([...participanteAtualizado])
+        } catch (error) { console.log(error) }
+    }
     return (
         <>
             <Header />
-            <TableContainer component={Paper}>
-                <div style={{display: 'flex'}}>
-                    {/* <h1 style={{ alignSelf: 'center' }}>{churrasco[0].descricao}</h1> */}
+            <div className="title">
+                <div className="title_top">
+                    <h1>{churrasco.map((d) => d.descricao)}</h1>
+                    <h1>{churrasco.map((e) => formatarData(e.data))}</h1>
                 </div>
-                {/* {console.log(churrasco[0].descricao)} */}
+                <div className="title_des">
+                    <h3>{churrasco.map((e) => e.obsChurras)}</h3>
+                </div>
+            </div>
+            <h2>PARTICIPANTES</h2>
+            <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -62,8 +82,14 @@ const DetalhesChurrasco = () => {
                                     <Checkbox checked={participante.pago} />
                                 </TableCell>
                                 <TableCell>{participante.obs}</TableCell>
+
                                 <TableCell><Button variant="outlined">Editar</Button></TableCell>
-                                <TableCell><Button variant="outlined" color="error">Excluir</Button></TableCell>
+                                <TableCell>
+                                    <Button variant="outlined" color="error"
+                                        onClick={() => excluirParticipante(participante._id)}>
+                                        Excluir
+                                    </Button>
+                                </TableCell>
 
                             </TableRow>
                         )}

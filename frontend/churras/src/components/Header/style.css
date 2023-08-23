@@ -1,32 +1,26 @@
 section {
   display: flex;
-  color: white;
-  
+  color: #ffffff;
 }
 body{
   background-color: black;
 }
-.App-header {
+
+section h1 {
   display: flex;
-  width: 100%;
+  margin-right: 4rem;
+  justify-content: end;
   align-items: center;
+  width: 100%;
   color: white;
 }
 
-ul {
-  display: flex;
-  width: 100%;
-  justify-content: space-around;
-  align-items: center;
-  list-style: none;
-  cursor: pointer;
-}
 li:hover {
   opacity: 0.3;
 }
 
 .img-logo {
-
+  position: relative;
   height: 120px;
   cursor: pointer;
 

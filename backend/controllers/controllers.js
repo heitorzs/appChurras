@@ -62,6 +62,26 @@ class ChurrasControllers {
     })
   }
 
+  static excluirParticipante = async (req, res) => {
+    const id = req.params.id
+    const participanteId = req.params.participanteId;
+    console.log(req.params)
+    console.log(participanteId)
+
+    churras.findByIdAndUpdate(
+      {_id: id},
+      {$pull: {participantes: {_id: participanteId }}},
+      {new: true}
+      )
+    .then((data) => {
+      console.log("Participante deleteado com sucesso")
+      res.status(201).send(data)
+    }).catch((err) => {
+      console.log(err)
+      res.send({ error: err, msg: "erro ao deletar participante" })
+    })
+  }
+
 }
 
 

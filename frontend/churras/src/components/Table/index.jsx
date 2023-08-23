@@ -16,13 +16,16 @@ export default function DisplayTable() {
 
     const totalArrecadado = (participantes) => {
         let total = 0
-        participantes.map((participante) => { 
-            if(participante.pago)
-            total += participante.valorContribuicao
+        participantes.map((participante) => {
+            if (participante.pago)
+                total += participante.valorContribuicao
             return total
-        }) 
-        
+        })
         return total
+    }
+    const orcamento = (participantes) => {
+        let orcamento = 0
+        participantes.map((participante) => orcamento += participante.valorContribuicao)
     }
     async function fetchChurrascos() {
         const churrascos = await axios.get('http://localhost:5000/Churrascos')
@@ -43,7 +46,7 @@ export default function DisplayTable() {
         return dataFormatada
     }
 
-    
+
     return (
         <>
             <TableContainer component={Paper}>
@@ -54,7 +57,8 @@ export default function DisplayTable() {
                             <TableCell>Descricao</TableCell>
                             <TableCell>Detalhes</TableCell>
                             <TableCell>Participantes</TableCell>
-                            <TableCell>Total Arrecadado</TableCell>
+                            <TableCell>Total ja Arrecadado</TableCell>
+                            <TableCell>Total a ser Arrecadado</TableCell>
                             <TableCell>Editar</TableCell>
                             <TableCell>Excluir</TableCell>
                         </TableRow>
@@ -64,7 +68,7 @@ export default function DisplayTable() {
                             <TableRow key={eventos._id}>
                                 <TableCell>{formatarData(eventos.data)}</TableCell>
                                 <TableCell>{eventos.descricao}</TableCell>
-                                <TableCell> 
+                                <TableCell>
                                     <Link to={`/detalhesChurrasco/${eventos._id}`}><Button>ver mais</Button> </Link>
 
                                 </TableCell>
@@ -73,7 +77,8 @@ export default function DisplayTable() {
                                         <Button>Adicionar Participante</Button>
                                     </Link>
                                 </TableCell>
-                                <TableCell>{totalArrecadado(eventos.participantes)}</TableCell>
+                                <TableCell>R$ {totalArrecadado(eventos.participantes)}</TableCell>
+                                <TableCell>R$ {orcamento(eventos.participantes)}</TableCell>
                                 <TableCell><Button variant="outlined">Editar</Button></TableCell>
                                 <TableCell><Button variant="outlined" color="error"
                                     onClick={() => {
@@ -84,9 +89,11 @@ export default function DisplayTable() {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Link to="/cadastrarChurrasco">
-                <Button variant="outlined" color="primary">Adicionar Churrasco</Button>
-            </Link>
+            <div style={{display:'flex',justifyContent: 'flex-end', marginRight: '40px', marginTop: '10px'}}>
+                <Link to="/cadastrarChurrasco">
+                    <Button variant="outlined" color="primary">Adicionar Churrasco</Button>
+                </Link>
+            </div>
         </>
 
     )

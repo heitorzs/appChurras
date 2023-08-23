@@ -5,6 +5,7 @@ const ChurrasSchema = new mongoose.Schema({
     id: { type: String },
     data: { type: Date, default: Date.now },
     descricao: { type: String },
+    obsChurras: {type: String},
     participantes: [{
         nome: { type: String, required: true },
         valorContribuicao: { type: Number },
@@ -12,7 +13,6 @@ const ChurrasSchema = new mongoose.Schema({
         pago: { type: Boolean },
         obs: { type: String }
     }],
-    totalArrecadado: {type: Number}
 })
 
 const churras = mongoose.model("churras", ChurrasSchema);

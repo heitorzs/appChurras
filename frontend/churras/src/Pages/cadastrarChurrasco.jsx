@@ -83,7 +83,7 @@ export default function CadastrarChurrasco() {
             onChange={(e) => setObsChurras(e.target.value)}
           />
 
-          <h2>Novo Participante</h2>
+          {/* <h1>Novo Participante</h1>
 
           <TextField className='input'
             variant='standard'
@@ -99,9 +99,9 @@ export default function CadastrarChurrasco() {
             type="number" value={valorContribuicao}
             onChange={(e) => setValorContribuicao(e.target.value)}
             required
-          />
+          /> 
 
-          <div>
+           <div>
             <label>Bebida:</label>
             <Checkbox label="Bebida" checked={bebida} onChange={(e) => setBebida(e.target.checked)} />
           
@@ -112,7 +112,7 @@ export default function CadastrarChurrasco() {
               className='input'
               id='multiline'
               placeholder='OBS do participante'
-              value={obs} onChange={(e) => setObs(e.target.value)} />
+              value={obs} onChange={(e) => setObs(e.target.value)} /> */}
 
           <Button variant="outlined" type="submit">Adicionar Churrasco</Button>
         </form>
