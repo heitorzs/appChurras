@@ -6,6 +6,7 @@ const ChurrasSchema = new mongoose.Schema({
     data: { type: Date, default: Date.now },
     descricao: { type: String },
     obsChurras: {type: String},
+    valorSugerido: {type: String},
     participantes: [{
         nome: { type: String, required: true },
         valorContribuicao: { type: Number },

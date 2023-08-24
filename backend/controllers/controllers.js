@@ -32,8 +32,21 @@ class ChurrasControllers {
     })
   }
 
+  static atualizarChurras = async (req, res) => {
+    const id = req.params.id;
+    const churrasAtualizado = req.body;
+    console.log(churrasAtualizado)
+    churras.findOneAndUpdate( {_id: id}, churrasAtualizado, {new: true} ).then((data) => {
+      console.log("churrasco Alterado com sucesso")
+      res.status(200).send(data)  
+    }).catch((err) => {
+      console.log(err)
+      res.send({ error: err, msg: "erro ao salvar" })
+    })
+  }
+
   static adicionarParticipante = async (req, res) => {
-    const id = req.params.id
+    const id = req.params.id;
     const novoParticipante = req.body;
 
     churras.findByIdAndUpdate(
@@ -51,7 +64,7 @@ class ChurrasControllers {
     })
   }
 
-  static excluirChurrasco = async (req, res) => {
+  static excluirChurras = async (req, res) => {
   
     const id = req.params.id
     churras.findByIdAndDelete({_id: id})
@@ -62,11 +75,30 @@ class ChurrasControllers {
     })
   }
 
+  static editarParticipante = async (req, res) => {
+    const id = req.params.id;
+    const participanteId = req.params.participanteId;
+    const participanteAtualizado = req.body;
+    console.log(id)
+    console.log(participanteId)
+
+    churras.findOneAndUpdate(
+      {_id: id, 'participantes._id': participanteId},
+      {$set: {'participantes.$': participanteAtualizado }},
+      {new: true}
+      )
+    .then((data) => {
+      console.log("Participante Atualizado com sucesso")
+      res.status(201).send(data)
+    }).catch((err) => {
+      console.log(err)
+      res.send({ error: err, msg: "erro ao atualizar participante" })
+    })
+  }
+  
   static excluirParticipante = async (req, res) => {
     const id = req.params.id
     const participanteId = req.params.participanteId;
-    console.log(req.params)
-    console.log(participanteId)
 
     churras.findByIdAndUpdate(
       {_id: id},

@@ -1,9 +1,9 @@
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import { useEffect, useState } from "react"
 import React from 'react'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { format, utcToZonedTime } from 'date-fns-tz'
+import http from "../../http"
 
 
 export default function DisplayTable() {
@@ -24,18 +24,19 @@ export default function DisplayTable() {
         return total
     }
     const orcamento = (participantes) => {
-        let orcamento = 0
-        participantes.map((participante) => orcamento += participante.valorContribuicao)
+        let totalAserArrecadado = 0;
+        participantes.map((participante) => totalAserArrecadado += participante.valorContribuicao)
+        return totalAserArrecadado
     }
     async function fetchChurrascos() {
-        const churrascos = await axios.get('http://localhost:5000/Churrascos')
+        const churrascos = await http.get('/')
         setEventos(churrascos.data)
     }
 
     async function excluirChurrasco(churrasId) {
         const id = churrasId
         try {
-            await axios.delete(`http://localhost:5000/churrascos/${id}`)
+            await http.delete(`${id}`)
             const churrascoAtualizados = eventos.filter(eventos => eventos._id !== churrasId)
             setEventos([...churrascoAtualizados])
         } catch (error) { console.log(error) }
@@ -79,7 +80,11 @@ export default function DisplayTable() {
                                 </TableCell>
                                 <TableCell>R$ {totalArrecadado(eventos.participantes)}</TableCell>
                                 <TableCell>R$ {orcamento(eventos.participantes)}</TableCell>
-                                <TableCell><Button variant="outlined">Editar</Button></TableCell>
+                                <TableCell>
+                                    <Link to={`/editarChurrasco/${eventos._id}`}>
+                                        <Button variant="outlined">Editar</Button>
+                                    </Link>    
+                                    </TableCell>
                                 <TableCell><Button variant="outlined" color="error"
                                     onClick={() => {
                                         excluirChurrasco(eventos._id)
@@ -89,7 +94,7 @@ export default function DisplayTable() {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <div style={{display:'flex',justifyContent: 'flex-end', marginRight: '40px', marginTop: '10px'}}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '40px', marginTop: '10px' }}>
                 <Link to="/cadastrarChurrasco">
                     <Button variant="outlined" color="primary">Adicionar Churrasco</Button>
                 </Link>
