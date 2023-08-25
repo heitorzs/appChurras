@@ -18,16 +18,49 @@ export default function FormParticipante({ isAtualizacao }) {
   const [pago, setPago] = useState(false);
   const [obs, setObs] = useState('');
   const [churrasco, setChurrasco] = useState([])
+  const [participante, setParticipante] = useState([])
   const parametros = useParams()
 
   useEffect(() => {
     fetchChurrascos()
+
   }, [])
 
+  useEffect(() => {
+    async function getParticipanteById() {
+      const res = await http.get(`${parametros.id}/participante/${parametros.participanteId}`)
+      const participanteData = await res.data
+      setParticipante(participanteData.participantes);
+      console.log(participanteData.participantes)
+    }
+    getParticipanteById()
+  }, [parametros.participanteId]);
+
   async function fetchChurrascos() {
-    const churrascos = await http.get(`${parametros.id}`)
-    setChurrasco(churrascos.data)
+    const res = await http.get(`${parametros.id}`)
+    const churrascos = await res.data
+    setChurrasco(churrascos)
   }
+
+  useEffect(() => {
+    if (isAtualizacao){
+
+      participante.map((e) => {
+        const nome = e.nome
+        setNomeParticipante(nome)
+        console.log(nome)
+        const contribuição = e.valorContribuicao
+        setValorContribuicao(contribuição)
+        const bebida = e.bebida
+        setBebida(bebida)
+        const pago = e.pago
+        setPago(pago)
+        const obs = e.obs
+        setObs(obs)
+      })
+    }
+      
+  }, [participante]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();

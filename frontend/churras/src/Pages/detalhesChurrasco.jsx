@@ -29,6 +29,7 @@ const DetalhesChurrasco = () => {
         fetchChurrascosByID()
     }, [])
 
+
     function formatarData(data) {
         const dataFormatada = format(utcToZonedTime(new Date(data), 'UTC'), 'dd/MM/yy', { timeZone: 'UTC' })
         return dataFormatada

@@ -6,6 +6,7 @@ const router = express.Router();
 router
   .get("/churrascos/", ChurrasControllers.listarChurras)
   .get("/churrascos/:id", ChurrasControllers.listarChurrasByID)
+  .get("/churrascos/:id/participante/:participanteId", ChurrasControllers.listarParticipanteById)
   .post("/churrascos/novo", ChurrasControllers.criarChurras)
   .put("/churrascos/:id", ChurrasControllers.atualizarChurras) 
   .post("/churrascos/:id", ChurrasControllers.adicionarParticipante) 
