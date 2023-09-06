@@ -1,18 +1,46 @@
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import { Button, Dialog, DialogActions, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import { useEffect, useState } from "react"
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { format, utcToZonedTime } from 'date-fns-tz'
 import http from "../../http"
-
+import FormChurrasco from "../../Pages/FormChurrasco"
+import FormParticipante from "../../Pages/FormParticipante"
 
 export default function DisplayTable() {
 
     const [eventos, setEventos] = useState([]);
+    const [openFormChurrasco, setOpenFormChurrasco] = useState(false);
+    const [openFormAtualizarChurrasco, setOpenFormAtualizarChurrasco] = useState(false);
+    const [openFormParticipantes, setOpenFormParticipantes] = useState(false);
+    const [selectId, setSelectID] = useState(null);
+
+    const handleOpenFormEditar = (eventId) => {
+        setSelectID(eventId);
+        setOpenFormAtualizarChurrasco(true);
+    };
+    const handleCloseFormEditar = () => {
+        setOpenFormAtualizarChurrasco(false);
+        setSelectID(null);
+    };
+
+    const handleOpenFormParticipantes = (eventId) => {
+        setSelectID(eventId);
+        setOpenFormParticipantes(true);
+    };
+
+
 
     useEffect(() => {
         fetchChurrascos()
-    }, [])
+        console.log('atualizou tabela')
+    }, [openFormChurrasco, openFormParticipantes, openFormAtualizarChurrasco])
+
+
+    async function fetchChurrascos() {
+        const churrascos = await http.get('/')
+        setEventos(churrascos.data)
+    }
 
     const totalArrecadado = (participantes) => {
         let total = 0
@@ -28,10 +56,6 @@ export default function DisplayTable() {
         participantes.map((participante) => totalAserArrecadado += participante.valorContribuicao)
         return totalAserArrecadado
     }
-    async function fetchChurrascos() {
-        const churrascos = await http.get('/')
-        setEventos(churrascos.data)
-    }
 
     async function excluirChurrasco(churrasId) {
         const id = churrasId
@@ -39,7 +63,12 @@ export default function DisplayTable() {
             await http.delete(`${id}`)
             const churrascoAtualizados = eventos.filter(eventos => eventos._id !== churrasId)
             setEventos([...churrascoAtualizados])
-        } catch (error) { console.log(error) }
+            alert('Churrasco excluido com sucesso')
+
+        } catch (error) {
+            alert('Erro ao excluir churrasco')
+            console.log(error)
+        }
     }
 
     function formatarData(data) {
@@ -50,6 +79,7 @@ export default function DisplayTable() {
 
     return (
         <>
+            {console.log('renderizou')}
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -71,20 +101,55 @@ export default function DisplayTable() {
                                 <TableCell>{eventos.descricao}</TableCell>
                                 <TableCell>
                                     <Link to={`/detalhesChurrasco/${eventos._id}`}><Button>ver mais</Button> </Link>
-
                                 </TableCell>
-                                <TableCell>{eventos.participantes.length}
-                                    <Link to={`/AdicionarParticipante/${eventos._id}`}>
-                                        <Button>Adicionar Participante</Button>
-                                    </Link>
+                                <TableCell>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '16px' }}>
+                                        {eventos.participantes.length}
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={() => handleOpenFormParticipantes(eventos._id)}
+                                        > Adicionar
+                                        </Button>
+                                        <Dialog
+                                            open={openFormParticipantes && selectId === eventos._id}
+                                            onClose={() => setOpenFormParticipantes(false)}
+                                            style={{ width: '50vw', margin: '0 auto' }}
+                                        >
+                                            <Button style={{ position: 'absolute', right: '0', }}
+                                                color="error" onClick={() => setOpenFormParticipantes(false)}>X</Button>
+                                            <FormParticipante
+                                                churrasId={selectId}
+                                            />
+                                        </Dialog>
+                                    </div>
+
                                 </TableCell>
                                 <TableCell>R$ {totalArrecadado(eventos.participantes)}</TableCell>
                                 <TableCell>R$ {orcamento(eventos.participantes)}</TableCell>
                                 <TableCell>
-                                    <Link to={`/editarChurrasco/${eventos._id}`}>
-                                        <Button variant="outlined">Editar</Button>
-                                    </Link>    
-                                    </TableCell>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={() => handleOpenFormEditar(eventos._id)}>
+                                        Editar
+                                    </Button>
+                                    <Dialog
+                                        open={openFormAtualizarChurrasco && selectId === eventos._id}
+                                        onClose={() => handleCloseFormEditar()}
+                                        style={{ width: '50vw', margin: '0 auto' }}
+                                    >
+                                        <Button
+                                            style={{ position: 'absolute', right: '0', }}
+                                            color="error"
+                                            onClick={() => handleCloseFormEditar()}> X
+                                        </Button>
+                                        <FormChurrasco
+                                            churrasId={selectId}
+                                            isAtualizacao={true}
+                                        />
+                                    </Dialog>
+                                </TableCell>
                                 <TableCell><Button variant="outlined" color="error"
                                     onClick={() => {
                                         excluirChurrasco(eventos._id)
@@ -95,12 +160,26 @@ export default function DisplayTable() {
                 </Table>
             </TableContainer>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '40px', marginTop: '10px' }}>
-                <Link to="/cadastrarChurrasco">
-                    <Button variant="outlined" color="primary">Adicionar Churrasco</Button>
-                </Link>
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => setOpenFormChurrasco(true)}
+                > Adicionar Churrasco
+                </Button>
+                <Dialog
+                    open={openFormChurrasco}
+                    onClose={() => setOpenFormChurrasco(false)}
+                    style={{ width: '50vw', margin: '0 auto' }}
+
+                >
+                    <Button style={{ position: 'absolute', right: '0', }} color="error" onClick={() => setOpenFormChurrasco(false)}>X</Button>
+                    <FormChurrasco
+                        isAtualizacao={false}
+                    />
+                </Dialog>
+
             </div>
         </>
-
     )
 }
 

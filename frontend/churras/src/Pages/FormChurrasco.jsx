@@ -1,41 +1,38 @@
 import React, { useEffect } from 'react'
-import Header from '../components/Header'
 import { useState } from 'react';
 import { Button, TextField, } from '@mui/material';
 import './form.css'
 import http from '../http';
-import { useParams } from 'react-router-dom';
 import { format, utcToZonedTime } from 'date-fns-tz';
 
 
-export default function FormChurrasco({ isAtualizacao }) {
-
+export default function FormChurrasco({ isAtualizacao, churrasId}) {
   const titulo = isAtualizacao ? "Atualizar Churrasco" : "Novo Churrasco"
   const botao = isAtualizacao ? "Atualizar Churrasco" : "Adicionar Churrasco"
 
   const [evento, setEvento] = useState([])
-  const parametros = useParams();
   const [data, setData] = useState('');
   const [obsChurras, setObsChurras] = useState('');
   const [descricao, setDescricao] = useState('');
   const [valorSugerido, setValorSugerido] = useState('');
+  
 
   useEffect(() => {
+    
     if (isAtualizacao) {
       async function fetchChurrascosByID() {
         try {
-          const response = await http.get(`${parametros.id}`)
+          const response = await http.get(`${churrasId}`)
           const churrasco = await response.data
           setEvento(churrasco)
-          return
         } catch (error) {
           console.log('Erro ao encontrar churrasco')
         }
       }
       fetchChurrascosByID()
     }
-
-  }, [])
+    
+  }, [isAtualizacao, churrasId])
 
   useEffect(() => {
     evento.map((e) => {
@@ -49,10 +46,7 @@ export default function FormChurrasco({ isAtualizacao }) {
       setValorSugerido(valor[0])
     })
 
-    console.log(evento); // Aqui você verá o valor atualizado do estado após o fetch
   }, [evento]);
-
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -63,22 +57,26 @@ export default function FormChurrasco({ isAtualizacao }) {
       obsChurras,
       valorSugerido,
     };
-    if (parametros.id) {
+    if (isAtualizacao) {
       try {
-        const atualizarChurras = await http.put(`/${parametros.id}`, Churrasco)
+        const atualizarChurras = await http.put(`/${churrasId}`, Churrasco)
         console.log('Resposta do servidor:', atualizarChurras.data);
+        alert('Churrasco Atualizado com sucesso')
         setData('')
         setDescricao('')
         setObsChurras('')
         setValorSugerido('')
-
       } catch (error) {
+        alert('Erro ao atualizar churrasco')
+
         console.error('Erro ao enviar requisição:', error);
       }
     } else {
 
       try {
         const response = await http.post(`/novo`, Churrasco);
+        alert('Churrasco Adicionado com sucesso')
+
         console.log('Resposta do servidor:', response.data);
 
         setData('')
@@ -86,7 +84,9 @@ export default function FormChurrasco({ isAtualizacao }) {
         setObsChurras('')
         setValorSugerido('')
 
+
       } catch (error) {
+        alert('Erro ao salvar churrasco')
         console.error('Erro ao enviar requisição:', error);
       }
     };
@@ -99,7 +99,6 @@ export default function FormChurrasco({ isAtualizacao }) {
   }
   return (
     <>
-      <Header />
       <div className='wrapper'>
 
         <form className='form_wrap' onSubmit={handleSubmit}>
@@ -138,6 +137,7 @@ export default function FormChurrasco({ isAtualizacao }) {
             required
           />
           <Button variant="outlined" type="submit">{botao}</Button>
+
         </form>
       </div>
     </>

@@ -1,18 +1,26 @@
-import Header from "../components/Header";
 import './form.css'
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from "react-router-dom"
-import { Button, Checkbox, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { useParams } from "react-router-dom"
+import { Button, Checkbox, Dialog, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { format, utcToZonedTime } from 'date-fns-tz'
 import http from "../http";
+import FormParticipante from './FormParticipante';
 
 
 
 const DetalhesChurrasco = () => {
     const [churrasco, setChurrasco] = useState([])
     const [participantes, setParticipantes] = useState([])
+    const [selectId, setSelectID] = useState(null);
+    const [openFormEditarParticipante, setOpenFormEditarParticipante] = useState(false)
+    const [openFormParticipante, setOpenFormParticipante] = useState(false)
 
     const parametros = useParams()
+
+    function handleOpenEditarParticipante(eventId) {
+        setSelectID(eventId);
+        setOpenFormEditarParticipante(true);
+    }
 
     async function fetchChurrascosByID() {
         try {
@@ -27,7 +35,7 @@ const DetalhesChurrasco = () => {
 
     useEffect(() => {
         fetchChurrascosByID()
-    }, [])
+    }, [openFormEditarParticipante, openFormParticipante])
 
 
     function formatarData(data) {
@@ -45,7 +53,6 @@ const DetalhesChurrasco = () => {
     }
     return (
         <>
-            <Header />
             <div className="title">
                 <div className="title_top">
                     <h1>{churrasco.map((d) => d.descricao)}</h1>
@@ -84,9 +91,20 @@ const DetalhesChurrasco = () => {
                                 <TableCell>{participante.obs}</TableCell>
 
                                 <TableCell>
-                                    <Link to={`/editarParticipante/${parametros.id}/participante/${participante._id}`}>
-                                        <Button variant="outlined">Editar</Button>
-                                    </Link>
+                                    <Button onClick={() => handleOpenEditarParticipante(participante._id)} variant="outlined">Editar</Button>
+                                    <Dialog
+                                        open={openFormEditarParticipante && selectId === participante._id}
+                                        onClose={() => setOpenFormEditarParticipante(false)}
+                                    >
+                                        <Button style={{ position: 'absolute', right: '0', }}
+                                            color="error" onClick={() => setOpenFormEditarParticipante(false)}>X</Button>
+                                        <FormParticipante
+                                            isAtualizacao={true}
+                                            churrasId={parametros.id}
+                                            participanteId={participante._id}
+                                        />
+                                    </Dialog>
+
                                 </TableCell>
                                 <TableCell>
                                     <Button variant="outlined" color="error"
@@ -101,9 +119,18 @@ const DetalhesChurrasco = () => {
                 </Table>
             </TableContainer>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '40px', marginTop: '10px' }}>
-                <Link to={`/AdicionarParticipante/${parametros.id}`}>
-                    <Button variant="outlined" color="primary">Adicionar Participante</Button>
-                </Link>
+
+                <Button onClick={() => setOpenFormParticipante(true)} variant="outlined" color="primary">Adicionar Participante</Button>
+                <Dialog
+                    open={openFormParticipante}
+                    onClose={() => setOpenFormParticipante(false)}
+                >
+                    <Button style={{ position: 'absolute', right: '0', }}
+                        color="error" onClick={() => setOpenFormParticipante(false)}>X</Button>
+                    <FormParticipante
+                        churrasId={parametros.id}
+                    />
+                </Dialog>
             </div>
         </>
     )

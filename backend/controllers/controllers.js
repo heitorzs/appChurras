@@ -12,8 +12,8 @@ class ChurrasControllers {
   };
 
   static listarChurrasByID = async (req, res, next) => {
-    const id = req.params.id
     try {
+      const id = req.params.id
       const churrasResultado = await churras.find({_id: id});
       res.status(200).json(churrasResultado);
     } catch (error) {
@@ -23,7 +23,7 @@ class ChurrasControllers {
 
   static criarChurras = async (req, res) => {
     const novoChurrasco = req.body;
-    churras.create( novoChurrasco ).then((data) => {
+    await churras.create( novoChurrasco ).then((data) => {
       console.log("churrasco salvo")
       res.status(201).send(data)
     }).catch((err) => {

@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react'
 import { useParams } from "react-router-dom"
-import Header from '../components/Header'
 import { useState } from 'react';
 import { Button, Checkbox, TextField, } from '@mui/material';
 import './form.css'
 import http from '../http';
 
 
-export default function FormParticipante({ isAtualizacao }) {
+export default function FormParticipante({ isAtualizacao, churrasId, participanteId }) {
 
   const titulo = isAtualizacao ? "Editar Participante" : "Novo Participante"
   const botao = isAtualizacao ? "Editar Participante" : "Adicionar Participante"
@@ -23,27 +22,28 @@ export default function FormParticipante({ isAtualizacao }) {
 
   useEffect(() => {
     fetchChurrascos()
-
   }, [])
 
   useEffect(() => {
-    async function getParticipanteById() {
-      const res = await http.get(`${parametros.id}/participante/${parametros.participanteId}`)
-      const participanteData = await res.data
-      setParticipante(participanteData.participantes);
-      console.log(participanteData.participantes)
+    if (isAtualizacao) {
+      getParticipanteById()
     }
-    getParticipanteById()
-  }, [parametros.participanteId]);
+  }, [participanteId, isAtualizacao]);
 
+  async function getParticipanteById() {
+    const res = await http.get(`${parametros.id}/participante/${participanteId}`)
+    const participanteData = res.data
+    setParticipante(participanteData.participantes);
+    console.log(participanteData.participantes)
+  }
   async function fetchChurrascos() {
-    const res = await http.get(`${parametros.id}`)
+    const res = await http.get(`${churrasId}`)
     const churrascos = await res.data
     setChurrasco(churrascos)
   }
 
   useEffect(() => {
-    if (isAtualizacao){
+    if (isAtualizacao) {
 
       participante.map((e) => {
         const nome = e.nome
@@ -59,8 +59,8 @@ export default function FormParticipante({ isAtualizacao }) {
         setObs(obs)
       })
     }
-      
-  }, [participante]);
+
+  }, [participante, isAtualizacao]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -76,28 +76,34 @@ export default function FormParticipante({ isAtualizacao }) {
     };
     if (isAtualizacao) {
       try {
-        const response = await http.put(`${parametros.id}/participante/${parametros.participanteId}`, novoParticipante);
+        const response = await http.put(`${churrasId}/participante/${participanteId}`, novoParticipante);
         console.log('Resposta do servidor:', response.data);
+        alert('Participante editado')
         setNomeParticipante('')
         setObs('')
         setValorContribuicao('')
-        setPago('')
-        setBebida('')
+        setPago(false)
+        setBebida(false)
       } catch (error) {
         console.error('Erro ao enviar requisição:', error);
+        alert('erro ao editar participante')
+
       }
     }
     else {
       try {
-        const response = await http.post(`${parametros.id}`, novoParticipante);
+        const response = await http.post(`${churrasId}`, novoParticipante);
         console.log('Resposta do servidor:', response.data);
+        alert('Participante Adicionado com sucesso')
         setNomeParticipante('')
         setObs('')
         setValorContribuicao('')
-        setPago('')
-        setBebida('')
+        setPago(false)
+        setBebida(false)
       } catch (error) {
         console.error('Erro ao enviar requisição:', error);
+        alert('Erro ao adicionar participante');
+
       }
     }
   };
@@ -105,8 +111,6 @@ export default function FormParticipante({ isAtualizacao }) {
 
   return (
     <>
-      <Header />
-
       <div className='wrapper'>
 
         <form className="form_wrap" onSubmit={handleSubmit}>
