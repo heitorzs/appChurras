@@ -61,9 +61,11 @@ const DetalhesChurrasco = () => {
                 <div className="title_des">
                     <h3>{churrasco.map((e) => e.obsChurras)}</h3>
                 </div>
+                <h2 style={{ color: 'white' }}>PARTICIPANTES</h2>
             </div>
-            <h3>PARTICIPANTES</h3>
-            <TableContainer component={Paper}>
+           
+            
+            <TableContainer component={Paper} sx={{ width: '85%', margin: '0 auto', marginTop: '20px' }}>
                 <Table>
                     <TableHead>
                         <TableRow>

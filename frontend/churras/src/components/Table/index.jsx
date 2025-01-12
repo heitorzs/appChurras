@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import { Button, Dialog, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import { useEffect, useState } from "react"
 import React from 'react'
 import { Link } from 'react-router-dom'
@@ -80,7 +80,7 @@ export default function DisplayTable() {
     return (
         <>
             {console.log('renderizou')}
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ width: '85%', margin: '0 auto', marginTop: '20px' }}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -159,8 +159,8 @@ export default function DisplayTable() {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '40px', marginTop: '10px' }}>
-                <Button
+            <div style={{ display: 'flex', justifyContent: 'flex-end', width: '85%', margin: '0 auto', marginTop: '10px' }}>
+                <Button style={{ borderColor: 'white', }}
                     variant="outlined"
                     color="primary"
                     onClick={() => setOpenFormChurrasco(true)}
