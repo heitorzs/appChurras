@@ -63,9 +63,8 @@ const DetalhesChurrasco = () => {
                 </div>
                 <h2 style={{ color: 'white' }}>PARTICIPANTES</h2>
             </div>
-           
-            
-            <TableContainer component={Paper} sx={{ width: '85%', margin: '0 auto', marginTop: '20px' }}>
+                       
+            <TableContainer component={Paper} sx={{ width: '85%', margin: '0 auto', marginTop: '5px', marginBottom: '10px' }}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -120,7 +119,7 @@ const DetalhesChurrasco = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', width: '85%', margin: '0 auto', marginTop: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', width: '85%', margin: '0 auto', marginTop: '10px', paddingBottom: '60px',}}>
 
                 <Button  style={{ borderColor: 'white'}} 
                     onClick={() => setOpenFormParticipante(true)} 
