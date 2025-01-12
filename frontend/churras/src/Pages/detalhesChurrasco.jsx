@@ -120,9 +120,13 @@ const DetalhesChurrasco = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '40px', marginTop: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', width: '85%', margin: '0 auto', marginTop: '10px' }}>
 
-                <Button onClick={() => setOpenFormParticipante(true)} variant="outlined" color="primary">Adicionar Participante</Button>
+                <Button  style={{ borderColor: 'white'}} 
+                    onClick={() => setOpenFormParticipante(true)} 
+                    variant="outlined" color="primary">
+                    Adicionar Participante
+                </Button>
                 <Dialog
                     open={openFormParticipante}
                     onClose={() => setOpenFormParticipante(false)}
